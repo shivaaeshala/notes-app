@@ -1,6 +1,7 @@
 import Logo from "../components/navbar/logo";
 import SearchBar from "../components/navbar/searchBar";
 import UserProfile from "../components/navbar/userProfile";
+import CreateNote from "../components/navbar/createNote";
 
 export default function Navbar() {
     return (
@@ -8,6 +9,7 @@ export default function Navbar() {
             <Logo />
             <SearchBar />
             <UserProfile />
+            <CreateNote />
         </div>
     )
 }
