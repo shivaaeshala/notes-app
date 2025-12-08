@@ -14,7 +14,7 @@ export function SignInButton() {
               callbackURL: "/"
           });
         }}
-        className="gap-2 w-full"
+        className="gap-2 w-full cursor-pointer"
         variant="outline"
       >
         <svg className="w-4 h-4" viewBox="0 0 24 24">
