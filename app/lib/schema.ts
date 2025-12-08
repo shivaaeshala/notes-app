@@ -5,56 +5,72 @@ CREATE EXTENSION IF NOT EXISTS "citext";
 `;
 
 export const users = `
-CREATE TABLE IF NOT EXISTS users (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+CREATE TABLE IF NOT EXISTS "user" (
+  id TEXT PRIMARY KEY,
   email CITEXT NOT NULL UNIQUE,
   name TEXT,
-  hashed_password TEXT,         -- store password hash (bcrypt/argon2)
-  email_verified TIMESTAMP WITH TIME ZONE,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+  image TEXT,
+  "hashedPassword" TEXT,
+  "emailVerified" BOOLEAN,
+  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
--- index for fast lookup by email
-CREATE UNIQUE INDEX IF NOT EXISTS users_email_idx ON users (email);
+CREATE UNIQUE INDEX IF NOT EXISTS user_email_idx ON "user" (email);
 `;
 
 export const sessions = `
-CREATE TABLE IF NOT EXISTS sessions (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  session_token TEXT NOT NULL UNIQUE,
-  expires_at TIMESTAMP WITH TIME ZONE,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+CREATE TABLE IF NOT EXISTS session (
+  id TEXT PRIMARY KEY,
+  "userId" TEXT NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+  token TEXT NOT NULL UNIQUE,
+  "expiresAt" TIMESTAMP WITH TIME ZONE,
+  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  "ipAddress" TEXT,
+  "userAgent" TEXT
 );
-CREATE INDEX IF NOT EXISTS sessions_user_id_idx ON sessions (user_id);
-CREATE UNIQUE INDEX IF NOT EXISTS sessions_token_idx ON sessions (session_token);
+CREATE INDEX IF NOT EXISTS session_user_id_idx ON session ("userId");
+CREATE UNIQUE INDEX IF NOT EXISTS session_token_idx ON session (token);
 `;
 
 export const accounts = `
-CREATE TABLE IF NOT EXISTS accounts (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  account_id TEXT NOT NULL,
-  provider_id TEXT NOT NULL,
-  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  access_token TEXT,
-  refresh_token TEXT,
-  id_token TEXT,
-  expires_at TIMESTAMPTZ,
-  access_token_expires_at TIMESTAMPTZ,
+CREATE TABLE IF NOT EXISTS account (
+  id TEXT PRIMARY KEY,
+  "accountId" TEXT NOT NULL,
+  "providerId" TEXT NOT NULL,
+  "userId" TEXT NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+  "accessToken" TEXT,
+  "refreshToken" TEXT,
+  "idToken" TEXT,
+  "expiresAt" TIMESTAMPTZ,
+  "accessTokenExpiresAt" TIMESTAMPTZ,
   password TEXT,
   scope TEXT,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-
-  UNIQUE(provider_id, account_id)
+  "createdAt" TIMESTAMPTZ NOT NULL DEFAULT now(),
+  "updatedAt" TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE("providerId", "accountId")
 );
-CREATE INDEX IF NOT EXISTS accounts_user_id_idx ON accounts (user_id);
+CREATE INDEX IF NOT EXISTS account_user_id_idx ON account ("userId");
+`;
+
+export const verification = `
+CREATE TABLE IF NOT EXISTS verification (
+  id TEXT PRIMARY KEY,
+  identifier TEXT NOT NULL,
+  value TEXT NOT NULL,
+  "expiresAt" TIMESTAMP WITH TIME ZONE NOT NULL,
+  "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS verification_identifier_idx ON verification (identifier);
+CREATE INDEX IF NOT EXISTS verification_value_idx ON verification (value);
+CREATE INDEX IF NOT EXISTS verification_expires_at_idx ON verification ("expiresAt");
 `;
 
 export const notes = `
 CREATE TABLE IF NOT EXISTS notes (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  user_id TEXT NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
   title TEXT,
   content TEXT NOT NULL,
   is_archived BOOLEAN DEFAULT false,

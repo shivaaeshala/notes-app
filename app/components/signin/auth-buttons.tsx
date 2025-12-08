@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-export function signInButton() {
+export function SignInButton() {
     return (
         <Button 
         onClick={async () => {
@@ -40,7 +40,7 @@ export function signInButton() {
     )
 }
 
-export function signOutButton() {
+export function SignOutButton() {
     const router = useRouter();
     return (
         <Button

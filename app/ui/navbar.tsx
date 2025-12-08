@@ -5,7 +5,7 @@ import CreateNote from "../components/navbar/createNote";
 
 export default function Navbar() {
     return (
-        <div className="flex w-full content-center p-5 px-20 m-auto gap-10">
+        <div className="flex w-full content-center align-center p-5 px-20 m-auto gap-10">
             <Logo />
             <SearchBar />
             <UserProfile />

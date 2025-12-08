@@ -12,7 +12,7 @@ export default function SearchBar() {
                 Search
             </label>
             <input 
-                className="peer block bg-white text-black w-full rounded-full py-[9px] pl-10 pr-5 text-sm outline-2 placeholder:text-gray-500"
+                className="peer block bg-white text-black w-full rounded-full py-[9px] pl-10 pr-5 text-sm placeholder:text-gray-500 border-none"
                 placeholder='Search notes...'
                 onChange={(e) => {
                     handleSearch(e.target.value);

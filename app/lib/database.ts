@@ -1,6 +1,6 @@
 import "dotenv/config";
 import postgres from "postgres";
-import { enableExtensions, users, sessions, accounts, notes } from "./schema";
+import { enableExtensions, users, sessions, accounts, verification, notes } from "./schema";
 
 function getPostgreURL() {
     const url = process.env.POSTGRES_URL;
@@ -19,6 +19,7 @@ export async function initDb() {
         await sql.unsafe(users);
         await sql.unsafe(sessions);
         await sql.unsafe(accounts);
+        await sql.unsafe(verification);
         await sql.unsafe(notes);
 
         console.log("Database initialised");
