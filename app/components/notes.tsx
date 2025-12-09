@@ -63,7 +63,7 @@ export default function Notes({ notes }: NotesProps) {
     }
 
     return (
-        <main className="container mx-auto px-4 py-8 max-w-6xl">
+        <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-6xl">
             {notes.length === 0 ? (
                 <div className="text-center py-16">
                     <p className="text-neutral-400 text-lg">No notes yet. Create your first note!</p>
@@ -88,7 +88,11 @@ export default function Notes({ notes }: NotesProps) {
                                     </p>
                                     <div className="flex items-center justify-between text-xs text-neutral-500">
                                         <span>
-                                            {new Date(note.created_at).toLocaleDateString()}
+                                            {new Date(note.created_at).toLocaleDateString('en-US', {
+                                                year: 'numeric',
+                                                month: 'numeric',
+                                                day: 'numeric'
+                                            })}
                                         </span>
                                         {note.is_public && (
                                             <span className="px-2 py-1 bg-neutral-800 rounded text-neutral-400">
@@ -99,7 +103,7 @@ export default function Notes({ notes }: NotesProps) {
                                 </div>
                             </DialogTrigger>
 
-                            <DialogContent className="sm:max-w-[425px] color-black bg-black">
+                            <DialogContent className="w-[95vw] max-w-[425px] max-h-[90vh] overflow-y-auto color-black bg-black mx-4">
                                 <form action={(formData) => handleUpdate(formData, note.id)}>
                                     <DialogHeader>
                                         <DialogTitle>
@@ -120,14 +124,16 @@ export default function Notes({ notes }: NotesProps) {
                                         defaultValue={note.content}
                                         disabled={isPending}
                                         placeholder="Enter note..."
+                                        className="min-h-[200px] sm:min-h-[250px]"
                                     />
 
-                                    <DialogFooter className="flex gap-2">
+                                    <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:gap-2">
                                         <Button
                                             type="button"
                                             variant="destructive"
                                             onClick={() => handleDelete(note.id)}
                                             disabled={isPending}
+                                            className="w-full sm:w-auto"
                                         >
                                             Delete
                                         </Button>
@@ -135,7 +141,7 @@ export default function Notes({ notes }: NotesProps) {
                                             <Button 
                                                 type='button'
                                                 variant='outline' 
-                                                className='cursor-pointer' 
+                                                className='cursor-pointer w-full sm:w-auto' 
                                                 disabled={isPending}
                                             >
                                                 Cancel
@@ -143,7 +149,7 @@ export default function Notes({ notes }: NotesProps) {
                                         </DialogClose>
                                         <Button 
                                             type='submit' 
-                                            className='cursor-pointer' 
+                                            className='cursor-pointer w-full sm:w-auto' 
                                             disabled={isPending}
                                         >
                                             {isPending ? 'Saving...' : "Save"}

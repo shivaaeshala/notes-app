@@ -38,21 +38,25 @@ export default function CreateNote() {
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            {/* Mobile: Icon only, Desktop: Full button */}
             <DialogTrigger asChild>
                 <Button
                     data-slot='button'
-                    className='group relative flex shrink-0 w-[15%] items-center justify-center gap-1 overflow-hidden bg-white text-black transition-all before:absolute before:h-0 before:w-0 before:rounded-full before:bg-black before:duration-500 before:ease-out hover:shadow-white hover:before:h-56 hover:before:w-56'
+                    className='group relative flex shrink-0 items-center justify-center gap-1 sm:gap-2 overflow-hidden bg-white text-black transition-all before:absolute before:h-0 before:w-0 before:rounded-full before:bg-black before:duration-500 before:ease-out hover:shadow-white hover:before:h-56 hover:before:w-56 p-2 md:px-4 md:min-w-[140px]'
+                    aria-label="Create Note"
                 >
+                    {/* Mobile: Just icon */}
+                    <PlusIcon className='w-5 h-5 md:w-5 md:h-5 text-black group-hover:text-white z-10 transition-colors delay-300 group-hover:delay-0'/>
+                    {/* Desktop: Text label */}
                     <label htmlFor="Create Note"
-                        className='peer block py-[9px] text-black group-hover:text-white z-20 transition-colors delay-300 group-hover:delay-0 cursor-pointer'
+                        className='hidden md:block py-[9px] text-black group-hover:text-white z-20 transition-colors delay-300 group-hover:delay-0 cursor-pointer'
                     >
                         Create Note 
                     </label>
-                    <PlusIcon className='w-[2vw] text-black group-hover:text-white z-10 transition-colors delay-300 group-hover:delay-0'/>
                 </Button>
             </DialogTrigger>
 
-            <DialogContent className="sm:max-w-[425px] color-black bg-black">
+            <DialogContent className="w-[95vw] max-w-[425px] max-h-[90vh] overflow-y-auto bg-black border-neutral-800 mx-4">
                 <form action={handleSubmit}>
                     <DialogHeader>
                         <DialogTitle>
@@ -71,14 +75,15 @@ export default function CreateNote() {
                         name='content' 
                         placeholder='Enter note...' 
                         disabled={isPending}
+                        className="min-h-[200px]"
                     />
 
-                    <DialogFooter>
+                    <DialogFooter className="flex flex-col sm:flex-row gap-2">
                         <DialogClose asChild>
                             <Button 
                                 type='button'
                                 variant='outline' 
-                                className='cursor-pointer' 
+                                className='cursor-pointer w-full sm:w-auto' 
                                 disabled={isPending}
                             >
                                 Cancel
@@ -86,7 +91,7 @@ export default function CreateNote() {
                         </DialogClose>
                         <Button 
                             type='submit' 
-                            className='cursor-pointer' 
+                            className='cursor-pointer w-full sm:w-auto' 
                             disabled={isPending}
                         >
                             {isPending ? 'Saving...' : "Save"}
