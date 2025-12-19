@@ -126,7 +126,6 @@ export default function Notes({ notes }: NotesProps) {
                                                 id='title' 
                                                 name='title' 
                                                 defaultValue={note.title || ''} 
-                                                className='border-none' 
                                                 disabled={isPending}
                                                 placeholder="Enter Title"
                                             />
