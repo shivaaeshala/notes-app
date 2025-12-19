@@ -7,14 +7,14 @@ import {
     DialogContent,
     DialogHeader,
 } from "@/components/ui/dialog";
+import { useSearch } from '@/app/context/search-context';
 
 export default function SearchBar() {
     const [isOpen, setIsOpen] = useState(false);
-    const [searchQuery, setSearchQuery] = useState('');
+    const { searchQuery, setSearchQuery } = useSearch();
 
-    const handleSearch = (e: string) => {
-        setSearchQuery(e);
-        console.log(e);
+    const handleSearch = (query: string) => {
+        setSearchQuery(query);
     }
 
     return (

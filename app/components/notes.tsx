@@ -14,7 +14,8 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { updateNote, deleteNote } from '@/app/actions/note';
 import { useRouter } from 'next/navigation';
-import { useState, useTransition } from 'react';
+import { useMemo, useState, useTransition } from 'react';
+import { useSearch } from "../context/search-context";
 
 interface Note {
     id: string;
@@ -34,6 +35,20 @@ export default function Notes({ notes }: NotesProps) {
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
     const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
+    const { searchQuery } = useSearch();
+
+    const filteredNotes = useMemo(() => {
+        if(!searchQuery.trim()) {
+            return notes;
+        }
+
+        const query = searchQuery.toLowerCase().trim();
+        return notes.filter(note => {
+            const titleMatch = note.title?.toLowerCase().includes(query);
+            const contentMatch = note.content.toLowerCase().includes(query);
+            return titleMatch || contentMatch;
+        })
+    }, [notes, searchQuery]);
 
     async function handleUpdate(formData: FormData, noteId: string) {
         formData.append('id', noteId);
@@ -64,13 +79,13 @@ export default function Notes({ notes }: NotesProps) {
 
     return (
         <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-6xl">
-            {notes.length === 0 ? (
+            {filteredNotes.length === 0 ? (
                 <div className="text-center py-16">
                     <p className="text-neutral-400 text-lg">No notes yet. Create your first note!</p>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {notes.map((note) => (
+                    {filteredNotes.map((note) => (
                         <Dialog 
                             key={note.id}
                             open={editingNoteId === note.id}
